@@ -14,7 +14,8 @@ from app.shortcuts import (
     is_htmx
 )
 
-# from app.watch_events.models import WatchEvent
+#  TODO : PENDIENTE ACTIVAR
+from app.watch_events.models import WatchEvent
 from .models import Video
 from .schemas import (
     VideoCreateSchema,

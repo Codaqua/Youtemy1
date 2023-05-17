@@ -17,8 +17,8 @@
 <div class='col-md-3 col-12'>
     
     {% if object.title %}<h5>{{ object.title }}</h5>{% endif %}
-
-    <code>{{ object.render() }}</code>
+<!-- TODO: esto es lo que muestra el iframe in la pantalla de video -->
+    <!-- <code>{{ object.render() }}</code> -->
 </div>
 
 
@@ -35,7 +35,7 @@
         var currentTime;
         var isPlaying;
         var monitorTimeOut;
-        var monitorTimeInterval = 200;
+        var monitorTimeInterval = 1000; // set the time interval to check the current time of the video
         var timeSinceLastSaved = 0;
         var timeIntervalForSave = 5000;
         function onYouTubeIframeAPIReady() {
@@ -59,6 +59,7 @@
         };
     }
 
+    // set in which time the video will start (for instance: on the 5th second)
     function onPlayerReady(event){
         player.seekTo(initialStartTime)
         // player.playVideo()
@@ -74,6 +75,8 @@
             storeWatchEvent()
         }
     }
+
+    // TODO: clean the repeated code
     function onPlayerStateChange(event) {
        
         if (event.data === YT.PlayerState.PLAYING) {
@@ -107,7 +110,7 @@
             start_time: initialStartTime,
             duration: duration,
             host_id: videoId,
-            complete: (duration * .98) < currentTime
+            complete: (duration * .97) < currentTime
         }
         timeSinceLastSaved = 0;
         // console.log('saving...', data)

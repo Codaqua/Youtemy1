@@ -45,6 +45,7 @@ class Video(Model):
     def as_data(self):
         return {f"{self.host_service}_id": self.host_id, "path": self.path, "title": self.title}
 
+    # TODO: CHange the path of the URL --> "videos"
     @property
     def path(self):
         return f"/videos/{self.host_id}"

@@ -17,11 +17,11 @@ from cassandra.cqlengine.management import sync_table
 from pydantic.error_wrappers import ValidationError
 from . import config, db, utils
 
-# from .indexing.client import (
-#     update_index,
-#     search_index
-# )
-# from .playlists.routers import router as playlist_router
+from .indexing.client import (
+    update_index,
+    search_index
+)
+from .playlists.routers import router as playlist_router
 
 from .shortcuts import redirect, render
 from .users.backends import JWTCookieBackend
@@ -34,25 +34,24 @@ from .users.schemas import (
 from .videos.models import Video
 from .videos.routers import router as video_router
 
-# from .watch_events.models import WatchEvent
-# from .watch_events.routers import router as watch_event_router
+from .watch_events.models import WatchEvent
+from .watch_events.routers import router as watch_event_router
+
+from .playlists.models import Playlist
+from .playlists.routers import router as playlist_router
 
 DB_SESSION = None
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 # TEMPLATE_DIR = BASE_DIR / "templates"
-
+ 
 app = FastAPI()
 settings = config.get_settings()
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
 app.include_router(video_router)
-# app.include_router(playlist_router)
-# app.include_router(watch_event_router)
+app.include_router(watch_event_router)
+app.include_router(playlist_router)
 
 # templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
-
-
-
-
 
 # @app.get("/")
 # def homepage():
@@ -70,30 +69,25 @@ def on_startup():
     DB_SESSION = db.get_session()
     sync_table(User)
     sync_table(Video)
-    # sync_table(WatchEvent)
+    sync_table(WatchEvent)
+    sync_table(Playlist)
 
 
-@app.get("/", response_class=HTMLResponse)
-def homepage(request: Request):
-    # TODO: BORRAR EL SIGUIENTE PARRAFO
-    # You can pass context data to your template like this.
-    context = {"request": request, "abc": "ABC variable value"} # TODO: 
+# @app.get("/", response_class=HTMLResponse)
+# def homepage(request: Request):
+#     # TODO: BORRAR EL SIGUIENTE PARRAFO
+#     # You can pass context data to your template like this.
+#     context = {"request": request, "abc": "ABC variable value"} # TODO: 
 
-    if request.user.is_authenticated:  # Assuming you have implemented authentication.
-        return templates.TemplateResponse("dashboard.html", context, status_code=200)
-    else:
-        return templates.TemplateResponse("home.html", context, status_code=200)
+#     if request.user.is_authenticated:  # Assuming you have implemented authentication.
+#         return templates.TemplateResponse("dashboard.html", context, status_code=200)
+#     else:
+#         return templates.TemplateResponse("home.html", context, status_code=200)
 
 
 # TODO: ORIGINAL --> 4:14
-# @app.get("/", response_class=HTMLResponse)
-# def homepage(request: Request):
-#     if request.user.is_authenticated:
-#         return render(request, "dashboard.html", {}, status_code=200)
-#     return render(request, "home.html", {})
-  
-    
-    
+@app.get("/", response_class=HTMLResponse)
+def homepage(request: Request):
     if request.user.is_authenticated:
         return render(request, "dashboard.html", {}, status_code=200)
     return render(request, "home.html", {})
@@ -188,26 +182,26 @@ def signup_post_view(request: Request,
     # return redirect("/login")
 
 
-# @app.post('/update-index', response_class=HTMLResponse)
-# def htmx_update_index_view(request:Request):
-#     count = update_index()
-#     return HTMLResponse(f"({count}) Refreshed")
+@app.post('/update-index', response_class=HTMLResponse)
+def htmx_update_index_view(request:Request):
+    count = update_index()
+    return HTMLResponse(f"({count}) Refreshed")
 
 
-# @app.get("/search", response_class=HTMLResponse)
-# def search_detail_view(request:Request, q:Optional[str] = None):
-#     query = None
-#     context = {}
-#     if q is not None:
-#         query = q
-#         results = search_index(query)
-#         hits = results.get('hits') or []
-#         num_hits = results.get('nbHits')
-#         context = {
-#             "query": query,
-#             "hits": hits,
-#             "num_hits": num_hits
-#         }
-#     return render(request, "search/detail.html", context)
+@app.get("/search", response_class=HTMLResponse)
+def search_detail_view(request:Request, q:Optional[str] = None):
+    query = None
+    context = {}
+    if q is not None:
+        query = q
+        results = search_index(query)
+        hits = results.get('hits') or []
+        num_hits = results.get('nbHits')
+        context = {
+            "query": query,
+            "hits": hits,
+            "num_hits": num_hits
+        }
+    return render(request, "search/detail.html", context)
 
 
