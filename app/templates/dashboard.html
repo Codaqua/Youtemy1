@@ -6,10 +6,10 @@
 {% block content %}
 
 <div class='text-center col-md-4 col-sm-6 col-12 mx-auto'>
-<h1>Welcome back user! VERIFICAR!!!! -> </h1>
+<h1>Welcome back {{ request.user.username }}!! </h1>
 
 <!-- TODO 4:20 -->
-{{ request.user.username }}
+{{ request.user.user_id }}
 
 <h3>Search for content</h3>
 {% include 'search/search_form.html' %}

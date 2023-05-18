@@ -9,7 +9,7 @@ class VideoIndexSchema(BaseModel):
     objectType: str = "Video"
     title: Optional[str]
     path: str = Field(alias='host_id')
-    # related -> playlist names
+    # related -> course names
         
     @validator("path")
     def set_path(cls, v, values, **kwargs):
@@ -17,9 +17,9 @@ class VideoIndexSchema(BaseModel):
         return f"/videos/{host_id}"
 
 
-class PlaylistIndexSchema(BaseModel):
+class CourseIndexSchema(BaseModel):
     objectID: uuid.UUID = Field(alias='db_id')
-    objectType: str = "Playlist"
+    objectType: str = "Course"
     title: Optional[str]
     path: str = Field(default='/')
     # related -> host_ids -> Video Title
@@ -28,5 +28,5 @@ class PlaylistIndexSchema(BaseModel):
     def set_defaults(cls, values):
         objectID = values.get('objectID')
         values['objectID'] = str(objectID)
-        values['path'] = f"/playlists/{objectID}"
+        values['path'] = f"/courses/{objectID}"
         return values

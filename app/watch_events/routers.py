@@ -12,7 +12,8 @@ def watch_event_view(request:Request, watch_event:WatchEventSchema):
         cleaned_data = watch_event.dict()
         data = cleaned_data.copy()
         data.update({
-            "user_id": request.user.username
+            # "user_id": request.user.username
+            "user_id": request.user.user_id
         })
         # print(data)
         # print(request.user.is_authenticated)

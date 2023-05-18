@@ -20,7 +20,7 @@ def extract_video_id(url):
             return query.path.split("/")[2]
         if query.path[:3] == "/v/":
             return query.path.split("/")[2]
-        # # below is optional for playlists
-        # if query.path[:9] == "/playlist":
+        # # below is optional for courses
+        # if query.path[:9] == "/course":
         #     return parse_qs(query.query)["list"][0]
     return None

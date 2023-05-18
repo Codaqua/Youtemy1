@@ -33,6 +33,7 @@ class UserLoginSchema(BaseModel):
 
 class UserSignupSchema(BaseModel):
     email: EmailStr
+    username: str
     password: SecretStr
     password_confirm: SecretStr
         

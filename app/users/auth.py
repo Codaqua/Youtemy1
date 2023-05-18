@@ -18,6 +18,8 @@ def authenticate(email, password):
 def login(user_obj, expires=settings.session_duration):
     raw_data = {
         "user_id": f"{user_obj.user_id}",
+        "role": user_obj.role,
+        "username": user_obj.username,
         # "role": "admin", # TODO : add roles . quitarlo de aquí porque aparece en el token
         "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=expires)
     }

@@ -13,12 +13,14 @@ class User(Model):
     email = columns.Text(primary_key=True)
     user_id = columns.UUID(primary_key=True, default=uuid.uuid1)
     password = columns.Text() # secure
-
+    role = columns.Text() #(default='user') # TODO: student, tutor, admin
+    username = columns.Text() # TODO: unique
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
-        return f"User(email={self.email}, user_id={self.user_id})"
+        # return f"User(email={self.email}, user_id={self.user_id})"
+        return f"User(email={self.email}, user_id={self.user_id}, role={self.role}, username={self.username})"
 
     def set_password(self, pw, commit=False):
         pw_hash = security.generate_hash(pw)
@@ -33,14 +35,14 @@ class User(Model):
         return verified
 
     @staticmethod
-    def create_user(email, password=None):
+    def create_user(email, password=None, role='student', username=None):
         q = User.objects.filter(email=email)
         if q.count() != 0:
             raise exceptions.UserHasAccountException("User already has account.")
         valid, msg, email = validators._validate_email(email)
         if not valid:
             raise exceptions.InvalidEmailException(f"Invalid email: {msg}")
-        obj = User(email=email)
+        obj = User(email=email, role=role, username=username)
         obj.set_password(password)
         # obj.password = password
         obj.save()

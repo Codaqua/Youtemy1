@@ -33,9 +33,9 @@ router = APIRouter(
 def video_create_view(
     request: Request, 
     is_htmx=Depends(is_htmx),
-    playlist_id:Optional[uuid.UUID]=None
+    course_id:Optional[uuid.UUID]=None
     ):
-    print(playlist_id)
+    print(course_id)
     if is_htmx:
         return render(request, "videos/htmx/create.html", {})
     return render(request, "videos/create.html", {})

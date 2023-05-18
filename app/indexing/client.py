@@ -3,11 +3,11 @@ from algoliasearch.search_client import SearchClient
 from app import config
 
 
-from app.playlists.models import Playlist
+from app.courses.models import Course
 from app.videos.models import Video
 
 from .schemas import (
-    PlaylistIndexSchema,
+    CourseIndexSchema,
     VideoIndexSchema
 )
 
@@ -23,11 +23,11 @@ def get_index():
 
 
 def get_dataset():
-    playlist_q = [dict(x) for x in Playlist.objects.all()]
-    playlists_dataset = [PlaylistIndexSchema(**x).dict() for x in playlist_q]
+    course_q = [dict(x) for x in Course.objects.all()]
+    courses_dataset = [CourseIndexSchema(**x).dict() for x in course_q]
     video_q = [dict(x) for x in Video.objects.all()]
     videos_dataset = [VideoIndexSchema(**x).dict() for x in video_q]
-    dataset = videos_dataset + playlists_dataset
+    dataset = videos_dataset + courses_dataset
     return dataset
 
 def update_index():
